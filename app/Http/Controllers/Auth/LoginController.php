@@ -12,17 +12,6 @@ use Illuminate\Support\Str;
 
 class LoginController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Login Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller handles authenticating users for the application and
-    | redirecting them to your home screen. The controller uses a trait
-    | to conveniently provide its functionality to your applications.
-    |
-    */
-
     use AuthenticatesUsers;
 
     /**
@@ -32,38 +21,26 @@ class LoginController extends Controller
      */
     protected $redirectTo = '/home';
 
-    /**
-     * Crear una nueva instancia del controlador de inicio de sesión.
-     * Se elimina el middleware auth redundante sobre el método logout.
-     *
-     * @return void
-     */
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
     }
 
-    /**
-     * Redireccionar el flujo de autenticación hacia la API de Google OAuth.
-     * Lee de forma nativa las configuraciones del service provider.
-     */
+    /*
+    |--------------------------------------------------------------------------
+    | PASARELA NATIVA DE GOOGLE OAUTH
+    |--------------------------------------------------------------------------
+    */
     public function redirectToGoogle()
     {
         return Socialite::driver('google')->redirect();
     }
 
-    /**
-     * Procesar la respuesta de retorno (Callback) oficial de los servidores de Google.
-     * Valida el token, recupera el perfil del alumno e inicia sesión de forma relacional.
-     */
-    public function handleGoogleCallback(Request $request)
+    public function handleGoogleCallback()
     {
         try {
-            // Recuperar el perfil del usuario autenticado de forma segura desde Google
             $googleUser = Socialite::driver('google')->user();
-
-            // Buscar si el correo electrónico institucional ya existe en HeidiSQL
-            // Si no existe, realiza el alta automatizada con una clave encriptada aleatoria
+            
             $user = User::firstOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
@@ -72,31 +49,49 @@ class LoginController extends Controller
                 ]
             );
 
-            // Registrar el dispositivo (User-Agent) en el almacenamiento de la sesión web
-            $device = $request->header('User-Agent');
-            $request->session()->put("device", $device);
-
-            // Autenticar al usuario dentro de la sesión activa de Laravel
             Auth::login($user);
-
-            // Redirección exitosa directa al Dashboard
             return redirect($this->redirectTo);
 
         } catch (\Exception $e) {
-            // En caso de error o token expirado, retorna al login notificando el fallo
             return redirect()->route('login')->withErrors([
-                'email' => 'Error de sincronización con la pasarela de Google: ' . $e->getMessage()
+                'email' => 'Fallo en la comunicación con la API de Google: ' . $e->getMessage()
             ]);
         }
     }
 
-    /**
-     * El usuario ha sido autenticado correctamente mediante el formulario clásico.
-     * Se ejecuta automáticamente tras un inicio de sesión tradicional exitoso.
-     */
-    protected function authenticated(Request $request, $user)
+    /*
+    |--------------------------------------------------------------------------
+    | PASARELA NATIVA DE GITHUB OAUTH
+    |--------------------------------------------------------------------------
+    */
+    public function redirectToGithub()
     {
-        $device = $request->header('User-Agent');
-        $request->session()->put("device", $device);
+        return Socialite::driver('github')->redirect();
+    }
+
+    public function handleGithubCallback()
+    {
+        try {
+            $githubUser = Socialite::driver('github')->user();
+            
+            // Si el correo de GitHub es privado, se genera uno ficticio institucional para evitar colisiones SQL
+            $email = $githubUser->getEmail() ?? ($githubUser->getNickname() . '@github.com');
+
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $githubUser->getName() ?? $githubUser->getNickname(),
+                    'password' => bcrypt(Str::random(16)),
+                ]
+            );
+
+            Auth::login($user);
+            return redirect($this->redirectTo);
+
+        } catch (\Exception $e) {
+            return redirect()->route('login')->withErrors([
+                'email' => 'Fallo en la comunicación con la API de GitHub: ' . $e->getMessage()
+            ]);
+        }
     }
 }

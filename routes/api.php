@@ -1,13 +1,13 @@
 <?php
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AlumnoApiController;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+/*
+|--------------------------------------------------------------------------
+| API Routes
+|--------------------------------------------------------------------------
+*/
 
-
-Route::middleware('auth.basic')->get('/user', function (Request $request){
-    return $request->user();
-});
+// Registro explícito del recurso RESTful completo para Postman
+Route::apiResource('alumnos', AlumnoApiController::class);
