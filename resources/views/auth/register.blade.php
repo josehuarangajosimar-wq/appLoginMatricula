@@ -3,135 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro Institucional - Matrículas</title>
+    <title>Sistema Matrícula - Registro Cuántico de Estudiante</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        @keyframes border-rotate {
-            100% { transform: rotate(360deg); }
+        /* Estilos Avanzados de Glassmorphism de Lujo Extremo */
+        .glass-card {
+            background: rgba(4, 15, 12, 0.55); /* Mayor transparencia */
+            backdrop-filter: blur(40px); /* Desenfoque extremo */
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(16, 185, 129, 0.15); /* Borde de Jade sutil */
+            /* Efecto de iluminación dual: sombra exterior y brillo interior */
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.06),
+                        0 0 50px rgba(16, 185, 129, 0.05);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
         }
-        @keyframes noise {
-            0%, 100% { transform: translate(0, 0); }
-            10% { transform: translate(-1%, -1%); }
-            30% { transform: translate(-2%, -2%); }
-            50% { transform: translate(-1%, -3%); }
-            70% { transform: translate(-3%, -1%); }
-            90% { transform: translate(-2%, -1%); }
+        /* Efecto hover interactivo en la tarjeta */
+        .glass-card:hover {
+            transform: translateY(-8px) scale(1.01);
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.8), 
+                        0 0 60px rgba(16, 185, 129, 0.1);
         }
-        .animate-border {
-            position: relative;
-            overflow: hidden;
-        }
-        .animate-border::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: conic-gradient(from 0deg, transparent 20%, #3b82f6 50%, #06b6d4 80%, transparent 100%);
-            animation: border-rotate 6s linear infinite;
-            z-index: 0;
-        }
-        .inner-card {
-            position: relative;
-            z-index: 10;
-            background: rgba(10, 15, 30, 0.75);
-            backdrop-filter: blur(24px);
-        }
-        .cyber-input {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+        /* Estilos de inputs opacos estilo Obsidian */
+        .glass-input {
+            background: rgba(3, 7, 6, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            border-top: 1px solid rgba(255, 255, 255, 0.08); /* Sutil rim light superior */
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .cyber-input:focus {
-            border-color: #06b6d4;
-            box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);
-            background: rgba(255, 255, 255, 0.06);
+        /* Brillo de Verde Aurora en foco */
+        .glass-input:focus {
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3),
+                        inset 0 1px 0 rgba(16, 185, 129, 0.1);
+            background: rgba(3, 7, 6, 0.85);
+        }
+        /* Animación suave para mensajes de error */
+        @keyframes fadeInError {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .error-msg {
+            animation: fadeInError 0.4s ease-out;
         }
     </style>
 </head>
-<body class="bg-[#040814] min-h-screen flex items-center justify-center p-4 font-sans relative overflow-hidden">
+<body class="bg-[#020504] min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans relative overflow-x-hidden select-none">
+    
+    <canvas id="bg-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"></canvas>
 
-    <div class="absolute inset-0 z-0 bg-[url('/images/background.png')] bg-cover bg-center fixed opacity-35 pointer-events-none"></div>
-    <div class="absolute inset-0 z-0 bg-gradient-to-tr from-[#040814] via-transparent to-[#081638] opacity-90 pointer-events-none"></div>
-
-    <div class="absolute inset-0 z-0 opacity-[0.02] pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=\'0 0 200 200\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cfilter id=\'noiseFilter\'%3E%3CfeTurbulence type=\'fractalNoise\' baseFrequency=\'0.65\' numOctaves=\'3\' stitchTiles=\'stitch\'/%3E%3C/filter%3E%3Crect width=\'100%25\' height=\'100%25\' filter=\'url(%23noiseFilter)\'/%3E%3C/svg%3E'); animation: noise 1s steps(4) infinite;"></div>
-
-    <div class="w-full max-w-md animate-border p-[1px] rounded-2xl shadow-[0_0_50px_rgba(0,0,0,0.8)] z-10 my-6">
-        <div class="inner-card p-8 rounded-[15px] flex flex-col">
+    <div class="w-full max-w-2xl glass-card p-10 sm:p-12 rounded-[2.5rem] z-10 relative">
+        
+        <div class="flex flex-col items-center mb-10">
+            <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-amber-500/5 border border-emerald-500/20 flex items-center justify-center shadow-2xl relative group mb-5">
+                <div class="absolute inset-0 rounded-3xl bg-emerald-400/5 blur-sm group-hover:blur-md transition-all"></div>
+                <svg class="w-7 h-7 text-emerald-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
+                </svg>
+            </div>
             
-            <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/30 mb-3">
-                    <svg class="w-6 h-6 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                    </svg>
+            <div class="text-center">
+                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-widest text-white uppercase bg-gradient-to-r from-white via-emerald-200 to-emerald-400 bg-clip-text text-transparent">
+                    ALTA DE ESTUDIANTE
+                </h1>
+                <p class="text-emerald-500/70 text-[11px] font-bold uppercase tracking-widest mt-2">
+                    Escuela de Tecnologías de la Información | SENATI
+                </p>
+                <p class="text-gray-500 text-[10px] mt-1 tracking-wider">Complete sus credenciales para la autenticación cuántica</p>
+            </div>
+        </div>
+
+        <form method="POST" action="{{ route('register') }}" class="space-y-6 text-[11px]">
+            @csrf
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Nombres Completos</label>
+                    <input type="text" name="name" value="{{ old('name') }}" required autofocus class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
+                    @error('name')
+                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
+                    @enderror
                 </div>
-                <h2 class="text-2xl font-bold text-white tracking-wide">ALTA DE ESTUDIANTE</h2>
-                <p class="text-gray-400 text-sm mt-1">Crea tu perfil en el ecosistema institucional</p>
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Apellidos Paterno y Materno</label>
+                    <input type="text" name="apellidos" value="{{ old('apellidos') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
+                    @error('apellidos')
+                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
+                    @enderror
+                </div>
             </div>
 
-            <form method="POST" action="{{ route('register') }}" class="space-y-4">
-                @csrf
+            <div class="relative group">
+                <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Correo Electrónico Institucional</label>
+                <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-wider">
+                @error('email')
+                    <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
+                @enderror
+            </div>
 
-                <div>
-                    <label for="name" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Nombre Completo</label>
-                    <input id="name" type="text" name="name" value="{{ old('name') }}" required autocomplete="name" autofocus 
-                           class="w-full px-4 py-2.5 rounded-xl text-white text-sm cyber-input outline-none @error('name') border-red-500/50 @enderror">
-                    @error('name')
-                        <p class="text-red-400 text-xs mt-1 font-medium">{{ $message }}</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Número de Teléfono</label>
+                    <input type="text" name="telefono" value="{{ old('telefono') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-widest">
+                    @error('telefono')
+                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <div>
-                    <label for="email" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Correo Electrónico</label>
-                    <input id="email" type="email" name="email" value="{{ old('email') }}" required autocomplete="email" 
-                           class="w-full px-4 py-2.5 rounded-xl text-white text-sm cyber-input outline-none @error('email') border-red-500/50 @enderror">
-                    @error('email')
-                        <p class="text-red-400 text-xs mt-1 font-medium">{{ $message }}</p>
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Número de DNI</label>
+                    <input type="text" name="dni" value="{{ old('dni') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-widest">
+                    @error('dni')
+                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
                     @enderror
                 </div>
+            </div>
 
-                <div>
-                    <label for="password" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Contraseña de Seguridad</label>
-                    <input id="password" type="password" name="password" required autocomplete="new-password"
-                           class="w-full px-4 py-2.5 rounded-xl text-white text-sm cyber-input outline-none @error('password') border-red-500/50 @enderror">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Contraseña de Seguridad</label>
+                    <input type="password" name="password" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
                     @error('password')
-                        <p class="text-red-400 text-xs mt-1 font-medium">{{ $message }}</p>
+                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
                     @enderror
                 </div>
-
-                <div>
-                    <label for="password-confirm" class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1.5">Confirmar Contraseña</label>
-                    <input id="password-confirm" type="password" name="password_confirmation" required autocomplete="new-password"
-                           class="w-full px-4 py-2.5 rounded-xl text-white text-sm cyber-input outline-none">
+                <div class="relative group">
+                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Confirmar Contraseña</label>
+                    <input type="password" name="password_confirmation" required class="w-full px-4 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
                 </div>
+            </div>
 
-                <button type="submit" class="w-full py-3 mt-4 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-semibold text-sm tracking-wide shadow-[0_4px_20px_rgba(59,130,246,0.4)] hover:brightness-110 active:scale-[0.98] transition-all cursor-pointer">
-                    REGISTRAR PERFIL INSTITUCIONAL
+            <div class="pt-6">
+                <button type="submit" class="w-full py-4.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs tracking-widest uppercase transition-all duration-400 cursor-pointer shadow-lg shadow-emerald-950/40 border border-emerald-400/20 active:scale-[0.98]">
+                    Finalizar Registro Cuántico
                 </button>
+            </div>
 
-                <div class="relative flex py-2 items-center">
-                    <div class="flex-grow border-t border-white/5"></div>
-                    <span class="flex-shrink mx-4 text-[10px] font-bold text-gray-500 uppercase tracking-widest">O registrarse con</span>
-                    <div class="flex-grow border-t border-white/5"></div>
-                </div>
+            <div class="relative flex py-3 items-center">
+                <div class="flex-grow border-t border-emerald-500/10"></div>
+            </div>
 
-                <a href="{{ url('auth/google') }}" class="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-white font-medium text-sm tracking-wide border border-white/10 flex items-center justify-center transition-all active:scale-[0.98] cursor-pointer shadow-lg hover:shadow-cyan-500/5">
-                    <svg class="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l3.66-2.85z" fill="#FBBC05"/>
-                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.85c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-                    </svg>
-                    <span class="tracking-wider text-xs font-bold">VINCULAR MI GOOGLE</span>
+            <div class="text-center pt-2">
+                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
+                    ¿Ya posee credenciales de acceso?
+                </p>
+                <a href="{{ route('login') }}" class="inline-block mt-3 px-6 py-2.5 rounded-full bg-emerald-950/20 hover:bg-emerald-950/40 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold tracking-widest uppercase transition-colors duration-300">
+                    Retornar al Inicio de Sesión
                 </a>
-
-                <div class="text-center pt-2">
-                    <a href="{{ route('login') }}" class="text-xs text-gray-400 hover:text-white transition-colors">¿Ya tienes cuenta activa? <span class="text-cyan-400 font-semibold underline">Inicia Sesión</span></a>
-                </div>
-            </form>
-
-        </div>
+            </div>
+        </form>
     </div>
+
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+
+        let width = canvas.width = window.innerWidth;
+        let height = canvas.height = window.innerHeight;
+
+        window.addEventListener('resize', () => {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        });
+
+        // Configuración de partículas flotantes
+        const particles = [];
+        const count = 45; // Ligeramente más denso para el registro
+
+        for (let i = 0; i < count; i++) {
+            particles.push({
+                x: Math.random() * width,
+                y: Math.random() * height,
+                vx: (Math.random() - 0.5) * 0.45,
+                vy: (Math.random() - 0.5) * 0.45,
+                radius: Math.random() * 2.2 + 1,
+                alpha: Math.random() * 0.5 + 0.1
+            });
+        }
+
+        // Configuración de las "Auroras" flotantes gigantes del fondo
+        const auroras = [
+            { x: width * 0.2, y: height * 0.2, targetX: width * 0.2, targetY: height * 0.2, r: width * 0.35, color: 'rgba(16, 185, 129, 0.05)' },
+            { x: width * 0.8, y: height * 0.8, targetX: width * 0.8, targetY: height * 0.8, r: width * 0.4, color: 'rgba(5, 150, 105, 0.04)' },
+            { x: width * 0.5, y: height * 0.5, targetX: width * 0.5, targetY: height * 0.5, r: width * 0.3, color: 'rgba(245, 158, 11, 0.02)' }
+        ];
+
+        function animate() {
+            ctx.fillStyle = '#020504';
+            ctx.fillRect(0, 0, width, height);
+
+            // 1. Dibujar Auroras gigantes fluidas
+            auroras.forEach(a => {
+                a.x += (a.targetX - a.x) * 0.01;
+                a.y += (a.targetY - a.y) * 0.01;
+
+                if (Math.abs(a.x - a.targetX) < 10) {
+                    a.targetX = Math.random() * width;
+                    a.targetY = Math.random() * height;
+                }
+
+                let grad = ctx.createRadialGradient(a.x, a.y, 0, a.x, a.y, a.r);
+                grad.addColorStop(0, a.color);
+                grad.addColorStop(1, 'rgba(2, 5, 4, 0)');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // 2. Dibujar y conectar partículas
+            particles.forEach((p, index) => {
+                p.x += p.vx;
+                p.y += p.vy;
+
+                if (p.x < 0 || p.x > width) p.vx *= -1;
+                if (p.y < 0 || p.y > height) p.vy *= -1;
+
+                ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Conectar líneas ultra finas si están cerca
+                for (let j = index + 1; j < count; j++) {
+                    let p2 = particles[j];
+                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
+                    if (dist < 125) {
+                        ctx.strokeStyle = `rgba(16, 185, 129, ${(1 - dist/125) * 0.07})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(p2.x, p2.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
