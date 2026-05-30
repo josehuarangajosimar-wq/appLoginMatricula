@@ -4,30 +4,38 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\User;
-use Laravel\Socialite\Facades\Socialite;
-use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Str;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use App\Models\Alumno;
+use Exception;
 
 class LoginController extends Controller
 {
-    use AuthenticatesUsers;
-
     /**
-     * Redirección por defecto tras un inicio de sesión válido.
-     *
-     * @var string
+     * Procesar inicio de sesión tradicional por credenciales.
      */
-    protected $redirectTo = '/home';
-
-    public function __construct()
+    public function login(Request $request)
     {
-        $this->middleware('guest')->except('logout');
+        $credentials = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            
+            // Redirigir con la pestaña por defecto cargada
+            return redirect()->intended('home')->with('success', 'Sesión iniciada correctamente.');
+        }
+
+        return back()->withErrors([
+            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
+        ])->onlyInput('email');
     }
 
     /**
-     * Redirige el flujo del cliente hacia el servidor seguro de Google.
+     * Redirigir el flujo hacia el portal de OAuth de Google.
      */
     public function redirectToGoogle()
     {
@@ -35,29 +43,44 @@ class LoginController extends Controller
     }
 
     /**
-     * Recibe el token de respuesta de Google e inicia la sesión del estudiante.
+     * Procesar la respuesta de la API de Google y validar existencia.
      */
-    public function handleGoogleCallback()
+    public function handleGoogleCallback(Request $request)
     {
         try {
             $googleUser = Socialite::driver('google')->user();
-            
-            // Busca si el correo ya existe, sino lo registra automáticamente en la base de datos
-            $user = User::firstOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'password' => bcrypt(Str::random(16)),
-                ]
-            );
+            $email = $googleUser->getEmail();
 
-            Auth::login($user);
-            return redirect($this->redirectTo);
+            // Buscar si el usuario existe en nuestra base de datos
+            $user = User::where('email', $email)->first();
 
-        } catch (\Exception $e) {
+            if ($user) {
+                // El usuario ya existe, iniciamos sesión directamente
+                Auth::login($user);
+                $request->session()->regenerate();
+
+                return redirect()->route('home')->with('success', 'Bienvenido al Portal Académico de la Escuela de TI.');
+            } else {
+                // El usuario NO existe, bloqueamos el acceso y enviamos al registro con un mensaje personalizado
+                return redirect()->route('register')->with('google_error', 'La cuenta de Google (' . $email . ') no se encuentra registrada en nuestro sistema de matrículas. Por favor, realice su registro en este formulario primero.');
+            }
+
+        } catch (Exception $e) {
             return redirect()->route('login')->withErrors([
-                'email' => 'Error de conexión con la API de Google: ' . $e->getMessage()
+                'email' => 'Hubo un error al intentar conectarse con los servidores de autenticación de Google.',
             ]);
         }
+    }
+
+    /**
+     * Cerrar sesión en el ecosistema.
+     */
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login')->with('success', 'Sesión finalizada de forma segura.');
     }
 }

@@ -3,158 +3,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistema Matrícula - Registro Cuántico de Estudiante</title>
+    <title>Portal Académico - Registro de Credenciales Corporativas</title>
+    <!-- Inyección Autónoma de Tailwind CSS de Alto Rendimiento -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Estilos Avanzados de Glassmorphism de Lujo Extremo */
-        .glass-card {
-            background: rgba(4, 15, 12, 0.55); /* Mayor transparencia */
-            backdrop-filter: blur(40px); /* Desenfoque extremo */
-            -webkit-backdrop-filter: blur(40px);
-            border: 1px solid rgba(16, 185, 129, 0.15); /* Borde de Jade sutil */
-            /* Efecto de iluminación dual: sombra exterior y brillo interior */
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.7), 
-                        inset 0 1px 0 rgba(255, 255, 255, 0.06),
-                        0 0 50px rgba(16, 185, 129, 0.05);
+        /* Animación suave de rotación del contorno de bronce */
+        @keyframes rotateNeonBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* Animación de destello metálico de lujo para el botón de confirmación */
+        @keyframes goldShimmer {
+            0% { transform: translateX(-100%) skewX(-15deg); }
+            100% { transform: translateX(100%) skewX(-15deg); }
+        }
+
+        /* Envoltura de tarjeta con bordes cepillados de doble capa y sombra profunda */
+        .executive-glow-wrapper {
+            position: relative;
+            overflow: hidden;
+            border-radius: 3rem; /* Curvas sofisticadas y ultra profesionales */
+            padding: 2px;
+            box-shadow: 0 50px 100px rgba(14, 7, 3, 0.8),
+                        0 0 60px rgba(184, 134, 11, 0.15);
             transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.4s ease;
         }
-        /* Efecto hover interactivo en la tarjeta */
-        .glass-card:hover {
-            transform: translateY(-8px) scale(1.01);
-            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.8), 
-                        0 0 60px rgba(16, 185, 129, 0.1);
+        .executive-glow-wrapper:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 60px 110px rgba(14, 7, 3, 0.9),
+                        0 0 80px rgba(184, 134, 11, 0.28);
         }
-        /* Estilos de inputs opacos estilo Obsidian */
-        .glass-input {
-            background: rgba(3, 7, 6, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            border-top: 1px solid rgba(255, 255, 255, 0.08); /* Sutil rim light superior */
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        .executive-glow-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: conic-gradient(from 0deg, #1f1008 0%, #b8860b 35%, #3b1e0f 65%, #1f1008 100%);
+            animation: rotateNeonBorder 8s linear infinite;
+            z-index: 0;
         }
-        /* Brillo de Verde Aurora en foco */
-        .glass-input:focus {
-            border-color: rgba(16, 185, 129, 0.6);
-            box-shadow: 0 0 20px rgba(16, 185, 129, 0.3),
-                        inset 0 1px 0 rgba(16, 185, 129, 0.1);
-            background: rgba(3, 7, 6, 0.85);
+
+        /* Tarjeta de Cristal Ahumado de Inmersión Profunda y Transparencia Robusta */
+        .glass-hull-dark {
+            position: relative;
+            z-index: 10;
+            background: rgba(14, 7, 3, 0.72); /* Densidad óptima para máxima legibilidad */
+            backdrop-filter: blur(50px) saturate(160%);
+            -webkit-backdrop-filter: blur(50px) saturate(160%);
+            border-radius: calc(3rem - 2px);
+            box-shadow: inset 0 1px 3px rgba(255, 255, 255, 0.08),
+                        inset 0 -1px 25px rgba(184, 134, 11, 0.03);
         }
-        /* Animación suave para mensajes de error */
-        @keyframes fadeInError {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
+
+        /* Inputs de alto contraste "Obsidian Sand" - Proporciones ejecutivas */
+        .corporate-matte-input {
+            background: rgba(22, 11, 5, 0.85);
+            border: 1.5px solid rgba(184, 134, 11, 0.18);
+            color: #fffbeb; /* Texto Champaña de altísima legibilidad */
+            font-weight: 600;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
         }
-        .error-msg {
-            animation: fadeInError 0.4s ease-out;
+        .corporate-matte-input:focus {
+            background: rgba(14, 7, 3, 0.95);
+            border-color: #b8860b; /* Oro Champaña */
+            box-shadow: 0 12px 25px rgba(184, 134, 11, 0.18),
+                        0 0 0 3px rgba(184, 134, 11, 0.12);
+            transform: translateY(-2px);
+            outline: none;
+        }
+
+        /* Degradado de texto serio e institucional */
+        .text-gradient-corporate {
+            background: linear-gradient(135deg, #fffbeb 0%, #d97706 60%, #b8860b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Botón Espresso Shimmer Gold de gama alta */
+        .shimmer-vivid-btn {
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, #2b180a 0%, #5c3a21 50%, #b8860b 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .shimmer-vivid-btn::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
+            transform: translateX(-100%);
+            animation: goldShimmer 3s infinite linear;
+        }
+        .shimmer-vivid-btn:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 45px rgba(184, 134, 11, 0.3);
+            filter: brightness(1.08);
+        }
+        .shimmer-vivid-btn:active {
+            transform: translateY(-1px) scale(0.99);
         }
     </style>
 </head>
-<body class="bg-[#020504] min-h-screen flex items-center justify-center p-4 sm:p-8 font-sans relative overflow-x-hidden select-none">
+<body class="bg-[#0e0704] min-h-screen p-6 md:p-12 lg:p-16 font-sans relative overflow-x-hidden select-none flex items-center">
     
-    <canvas id="bg-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"></canvas>
+    <!-- Lienzo del Motor Gráfico: Quantum Golden Fluid (Movimiento Continuo de Hilos de Oro) -->
+    <canvas id="iridescent-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"></canvas>
 
-    <div class="w-full max-w-2xl glass-card p-10 sm:p-12 rounded-[2.5rem] z-10 relative">
+    <!-- Distribución de Rejilla: Desplazamiento Izquierdo y Espacio Derecho Reservado -->
+    <div class="w-full max-w-[1440px] ml-0 lg:ml-12 xl:ml-20 mr-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
         
-        <div class="flex flex-col items-center mb-10">
-            <div class="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-500/10 to-amber-500/5 border border-emerald-500/20 flex items-center justify-center shadow-2xl relative group mb-5">
-                <div class="absolute inset-0 rounded-3xl bg-emerald-400/5 blur-sm group-hover:blur-md transition-all"></div>
-                <svg class="w-7 h-7 text-emerald-400 relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"></path>
-                </svg>
-            </div>
-            
-            <div class="text-center">
-                <h1 class="text-2xl sm:text-3xl font-extrabold tracking-widest text-white uppercase bg-gradient-to-r from-white via-emerald-200 to-emerald-400 bg-clip-text text-transparent">
-                    ALTA DE ESTUDIANTE
-                </h1>
-                <p class="text-emerald-500/70 text-[11px] font-bold uppercase tracking-widest mt-2">
-                    Escuela de Tecnologías de la Información | SENATI
-                </p>
-                <p class="text-gray-500 text-[10px] mt-1 tracking-wider">Complete sus credenciales para la autenticación cuántica</p>
+        <!-- COLUMNA IZQUIERDA: Tarjeta con Tamaño Adecuado y Amplio para Llenado Cómodo (Ocupa 5 de 12 columnas) -->
+        <div class="lg:col-span-5 xl:col-span-4.5 w-full max-w-[520px]">
+            <!-- Envoltura de Luz Cónica Rotativa -->
+            <div class="executive-glow-wrapper shadow-2xl">
+                <!-- Cuerpo de la Tarjeta Esmerilada -->
+                <div class="glass-hull-dark p-8 sm:p-12 flex flex-col">
+                    
+                    <!-- Encabezado Institucional -->
+                    <div class="flex flex-col items-center mb-8">
+                        <!-- Icono de Seguridad de Lujo -->
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#1f1008] via-[#3b1e0f] to-[#b8860b] flex items-center justify-center shadow-lg relative group mb-4">
+                            <div class="absolute inset-0 rounded-2xl bg-amber-700/20 blur-md group-hover:blur-xl transition-all"></div>
+                            <svg class="w-7 h-7 text-white relative z-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                        
+                        <div class="text-center">
+                            <h1 class="text-3xl font-black tracking-[0.12em] uppercase text-gradient-corporate">
+                                REGISTRO DE ESTUDIANTE
+                            </h1>
+                            <p class="text-amber-500/80 text-xs font-black uppercase tracking-widest mt-1.5">
+                                Escuela de Tecnologías de la Información | SENATI
+                            </p>
+                            <div class="h-[2px] w-24 bg-gradient-to-r from-transparent via-[#b8860b] to-transparent mx-auto mt-4 rounded-full"></div>
+                        </div>
+                    </div>
+
+                    <!-- Formulario de Registro Estricto de Laravel -->
+                    <form method="POST" action="{{ route('register') }}" class="space-y-5 text-[10px] tracking-widest text-amber-200/80 font-black uppercase">
+                        @csrf
+                        
+                        <!-- Inputs con mayor padding (py-4) y espaciado proporcional óptimo -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Nombres Completos</label>
+                                <input type="text" name="name" value="{{ old('name') }}" required autofocus class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm">
+                                @error('name') <span class="text-rose-400 text-[10px] mt-1.5 font-bold lowercase normal-case tracking-normal ml-1">{{ $message }}</span> @enderror
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Apellidos Completos</label>
+                                <input type="text" name="apellidos" value="{{ old('apellidos') }}" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm">
+                                @error('apellidos') <span class="text-rose-400 text-[10px] mt-1.5 font-bold lowercase normal-case tracking-normal ml-1">{{ $message }}</span> @enderror
+                            </div>
+                        </div>
+
+                        <div class="flex flex-col">
+                            <label class="mb-2.5 ml-1">Correo Electrónico Institucional</label>
+                            <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm tracking-wider">
+                            @error('email') <span class="text-rose-400 text-[10px] mt-1.5 font-bold lowercase normal-case tracking-normal ml-1">{{ $message }}</span> @enderror
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Número de Celular</label>
+                                <input type="text" name="telefono" value="{{ old('telefono') }}" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm tracking-widest">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Número de DNI</label>
+                                <input type="text" name="dni" value="{{ old('dni') }}" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm tracking-widest">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Contraseña de Acceso</label>
+                                <input type="password" name="password" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm">
+                            </div>
+                            <div class="flex flex-col">
+                                <label class="mb-2.5 ml-1">Confirmar Contraseña</label>
+                                <input type="password" name="password_confirmation" required class="w-full px-5 py-4 rounded-xl corporate-matte-input text-xs outline-none shadow-sm">
+                            </div>
+                        </div>
+
+                        <div class="pt-4">
+                            <button type="submit" class="shimmer-vivid-btn w-full py-4.5 rounded-xl text-white font-black text-xs tracking-widest uppercase cursor-pointer border border-white/10 shadow-lg">
+                                Finalizar Registro Institucional
+                            </button>
+                        </div>
+
+                        <div class="relative flex py-2 items-center">
+                            <div class="flex-grow border-t border-amber-900/20"></div>
+                        </div>
+
+                        <!-- Enlace Inferior de Retorno -->
+                        <div class="text-center pt-1">
+                            <p class="text-[9px] font-bold text-slate-500 tracking-wider mb-2">¿Ya cuenta con un perfil registrado?</p>
+                            <a href="{{ route('login') }}" class="inline-block px-8 py-3 rounded-full bg-amber-950/20 hover:bg-amber-950/40 border border-amber-500/20 text-amber-200 text-[9px] tracking-widest uppercase transition-all duration-300 cursor-pointer font-black shadow-sm">
+                                Regresar al Login
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
 
-        <form method="POST" action="{{ route('register') }}" class="space-y-6 text-[11px]">
-            @csrf
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Nombres Completos</label>
-                    <input type="text" name="name" value="{{ old('name') }}" required autofocus class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
-                    @error('name')
-                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Apellidos Paterno y Materno</label>
-                    <input type="text" name="apellidos" value="{{ old('apellidos') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
-                    @error('apellidos')
-                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                    @enderror
-                </div>
+        <!-- COLUMNA DERECHA RESERVADA: Ocupa el 60% restante del ancho de pantalla (7.5 de 12 columnas) -->
+        <!-- Totalmente libre y limpia de elementos para tu efecto 3D, Canvas secundario o icono gigante -->
+        <div class="hidden lg:flex lg:col-span-7 xl:col-span-7.5 h-[70vh] flex-col items-center justify-center relative p-8">
+            <div class="text-center select-none pointer-events-none opacity-20">
+                <!-- Espacio libre optimizado para tu inyección de efectos personalizados -->
             </div>
+        </div>
 
-            <div class="relative group">
-                <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Correo Electrónico Institucional</label>
-                <input type="email" name="email" value="{{ old('email') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-wider">
-                @error('email')
-                    <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Número de Teléfono</label>
-                    <input type="text" name="telefono" value="{{ old('telefono') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-widest">
-                    @error('telefono')
-                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Número de DNI</label>
-                    <input type="text" name="dni" value="{{ old('dni') }}" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner tracking-widest">
-                    @error('dni')
-                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                    @enderror
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Contraseña de Seguridad</label>
-                    <input type="password" name="password" required class="w-full px-5 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
-                    @error('password')
-                        <span class="error-msg text-red-400 text-xs mt-2 block font-medium tracking-wide">{{ $message }}</span>
-                    @enderror
-                </div>
-                <div class="relative group">
-                    <label class="block font-bold text-emerald-400/80 uppercase tracking-widest mb-2.5 ml-1">Confirmar Contraseña</label>
-                    <input type="password" name="password_confirmation" required class="w-full px-4 py-4 rounded-2xl glass-input text-white text-xs outline-none shadow-inner">
-                </div>
-            </div>
-
-            <div class="pt-6">
-                <button type="submit" class="w-full py-4.5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white font-extrabold text-xs tracking-widest uppercase transition-all duration-400 cursor-pointer shadow-lg shadow-emerald-950/40 border border-emerald-400/20 active:scale-[0.98]">
-                    Finalizar Registro Cuántico
-                </button>
-            </div>
-
-            <div class="relative flex py-3 items-center">
-                <div class="flex-grow border-t border-emerald-500/10"></div>
-            </div>
-
-            <div class="text-center pt-2">
-                <p class="text-[10px] font-bold text-gray-500 uppercase tracking-wider">
-                    ¿Ya posee credenciales de acceso?
-                </p>
-                <a href="{{ route('login') }}" class="inline-block mt-3 px-6 py-2.5 rounded-full bg-emerald-950/20 hover:bg-emerald-950/40 border border-emerald-500/20 text-emerald-300 text-[10px] font-bold tracking-widest uppercase transition-colors duration-300">
-                    Retornar al Inicio de Sesión
-                </a>
-            </div>
-        </form>
     </div>
 
+    <!-- Script del Motor Gráfico: Quantum Golden Fluid (Flujo Cuántico de Polvo de Oro e Hilos de Seda) -->
     <script>
-        const canvas = document.getElementById('bg-canvas');
+        const canvas = document.getElementById('iridescent-canvas');
         const ctx = canvas.getContext('2d');
 
         let width = canvas.width = window.innerWidth;
@@ -165,83 +231,170 @@
             height = canvas.height = window.innerHeight;
         });
 
-        // Configuración de partículas flotantes
+        let time = 0;
+        let rippleWaves = [];
         const particles = [];
-        const count = 45; // Ligeramente más denso para el registro
+        const particleCount = 80; // Cantidad robusta de micro-partículas de oro
 
-        for (let i = 0; i < count; i++) {
-            particles.push({
-                x: Math.random() * width,
-                y: Math.random() * height,
-                vx: (Math.random() - 0.5) * 0.45,
-                vy: (Math.random() - 0.5) * 0.45,
-                radius: Math.random() * 2.2 + 1,
-                alpha: Math.random() * 0.5 + 0.1
-            });
-        }
+        class GoldParticle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.radius = Math.random() * 1.8 + 0.6;
+                this.alpha = Math.random() * 0.5 + 0.2;
+                this.gravityInfluence = Math.random() * 0.05;
+            }
+            update(mouseX, mouseY) {
+                this.x += this.vx;
+                this.y += this.vy;
 
-        // Configuración de las "Auroras" flotantes gigantes del fondo
-        const auroras = [
-            { x: width * 0.2, y: height * 0.2, targetX: width * 0.2, targetY: height * 0.2, r: width * 0.35, color: 'rgba(16, 185, 129, 0.05)' },
-            { x: width * 0.8, y: height * 0.8, targetX: width * 0.8, targetY: height * 0.8, r: width * 0.4, color: 'rgba(5, 150, 105, 0.04)' },
-            { x: width * 0.5, y: height * 0.5, targetX: width * 0.5, targetY: height * 0.5, r: width * 0.3, color: 'rgba(245, 158, 11, 0.02)' }
-        ];
-
-        function animate() {
-            ctx.fillStyle = '#020504';
-            ctx.fillRect(0, 0, width, height);
-
-            // 1. Dibujar Auroras gigantes fluidas
-            auroras.forEach(a => {
-                a.x += (a.targetX - a.x) * 0.01;
-                a.y += (a.targetY - a.y) * 0.01;
-
-                if (Math.abs(a.x - a.targetX) < 10) {
-                    a.targetX = Math.random() * width;
-                    a.targetY = Math.random() * height;
+                // Atracción suave al puntero del mouse
+                if (mouseX !== undefined && mouseY !== undefined) {
+                    let dx = mouseX - this.x;
+                    let dy = mouseY - this.y;
+                    let dist = Math.hypot(dx, dy);
+                    if (dist < 250) {
+                        this.x += (dx / dist) * 0.5;
+                        this.y += (dy / dist) * 0.5;
+                    }
                 }
 
-                let grad = ctx.createRadialGradient(a.x, a.y, 0, a.x, a.y, a.r);
-                grad.addColorStop(0, a.color);
-                grad.addColorStop(1, 'rgba(2, 5, 4, 0)');
-                ctx.fillStyle = grad;
+                // Rebote elástico
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(217, 119, 6, ${this.alpha})`;
                 ctx.beginPath();
-                ctx.arc(a.x, a.y, a.r, 0, Math.PI * 2);
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
                 ctx.fill();
+            }
+        }
+
+        // Poblar hilos de polvo de oro
+        for (let i = 0; i < particleCount; i++) {
+            particles.push(new GoldParticle());
+        }
+
+        // Obtener posición del mouse de forma interactiva
+        let mouse = { x: undefined, y: undefined };
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+        window.addEventListener('mouseleave', () => {
+            mouse.x = undefined;
+            mouse.y = undefined;
+        });
+
+        class Ripple {
+            constructor(x, y) {
+                this.x = x; this.y = y; this.radius = 0;
+                this.maxRadius = 350; this.alpha = 0.6; this.speed = 4.5;
+            }
+            update() {
+                this.radius += this.speed;
+                this.alpha = 1 - (this.radius / this.maxRadius);
+            }
+        }
+
+        window.addEventListener('click', (e) => {
+            if (rippleWaves.length > 3) rippleWaves.shift();
+            rippleWaves.push(new Ripple(e.clientX, e.clientY));
+        });
+
+        function runFluidEngine() {
+            time += 0.0012;
+            
+            // Fondo Marrón Espresso Imperial Sólido Profundo
+            ctx.fillStyle = '#0e0704';
+            ctx.fillRect(0, 0, width, height);
+
+            // Capas de Seda Líquida Translúcida Bronce/Oro en movimiento continuo
+            for (let i = 0; i < 3; i++) {
+                ctx.beginPath();
+                let scale = 0.0015 - (i * 0.0003);
+                let waveY = height * (0.45 + i * 0.12);
+
+                ctx.moveTo(0, height);
+                for (let x = 0; x < width; x += 15) {
+                    let y = waveY + Math.sin(x * scale + time + i) * 75 + Math.cos(x * 0.0008 - time) * 35;
+                    ctx.lineTo(x, y);
+                }
+                ctx.lineTo(width, height);
+                
+                let alphaValue = 0.04 - (i * 0.008);
+                let waveGrad = ctx.createLinearGradient(0, waveY - 100, 0, height);
+                waveGrad.addColorStop(0, `rgba(184, 134, 11, ${alphaValue})`);
+                waveGrad.addColorStop(1, 'rgba(14, 7, 3, 0)');
+                ctx.fillStyle = waveGrad;
+                ctx.fill();
+            }
+
+            // Orbe de luz de Bronce Sutil Superior Izquierdo
+            let orbX1 = width * 0.2 + Math.sin(time) * 90;
+            let orbY1 = height * 0.3 + Math.cos(time * 0.8) * 70;
+            let gradOrb1 = ctx.createRadialGradient(orbX1, orbY1, 0, orbX1, orbY1, 400);
+            gradOrb1.addColorStop(0, 'rgba(59, 30, 15, 0.15)');
+            gradOrb1.addColorStop(0.6, 'rgba(184, 134, 11, 0.02)');
+            gradOrb1.addColorStop(1, 'rgba(14, 7, 3, 0)');
+            ctx.fillStyle = gradOrb1;
+            ctx.beginPath(); ctx.arc(orbX1, orbY1, 400, 0, Math.PI * 2); ctx.fill();
+
+            // Orbe de luz de Champaña Dorado Inferior Derecho
+            let orbX2 = width * 0.8 + Math.cos(time * 0.9) * 100;
+            let orbY2 = height * 0.7 + Math.sin(time * 1.2) * 60;
+            let gradOrb2 = ctx.createRadialGradient(orbX2, orbY2, 0, orbX2, orbY2, 450);
+            gradOrb2.addColorStop(0, 'rgba(184, 134, 11, 0.1)');
+            gradOrb2.addColorStop(0.6, 'rgba(14, 7, 3, 0)');
+            gradOrb2.addColorStop(1, 'rgba(14, 7, 3, 0)');
+            ctx.fillStyle = gradOrb2;
+            ctx.beginPath(); ctx.arc(orbX2, orbY2, 450, 0, Math.PI * 2); ctx.fill();
+
+            // Dibujar y actualizar polvo de oro
+            particles.forEach(p => {
+                p.update(mouse.x, mouse.y);
+                p.draw();
             });
 
-            // 2. Dibujar y conectar partículas
-            particles.forEach((p, index) => {
-                p.x += p.vx;
-                p.y += p.vy;
-
-                if (p.x < 0 || p.x > width) p.vx *= -1;
-                if (p.y < 0 || p.y > height) p.vy *= -1;
-
-                ctx.fillStyle = `rgba(16, 185, 129, ${p.alpha})`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Conectar líneas ultra finas si están cerca
-                for (let j = index + 1; j < count; j++) {
-                    let p2 = particles[j];
-                    let dist = Math.hypot(p.x - p2.x, p.y - p2.y);
-                    if (dist < 125) {
-                        ctx.strokeStyle = `rgba(16, 185, 129, ${(1 - dist/125) * 0.07})`;
+            // Conectar polvo de oro cercano con hilos de red
+            for (let i = 0; i < particleCount; i++) {
+                for (let j = i + 1; j < particleCount; j++) {
+                    let dist = Math.hypot(particles[i].x - particles[j].x, particles[i].y - particles[j].y);
+                    if (dist < 110) {
+                        ctx.strokeStyle = `rgba(184, 134, 11, ${(1 - dist/110) * 0.05})`;
                         ctx.lineWidth = 0.5;
                         ctx.beginPath();
-                        ctx.moveTo(p.x, p.y);
-                        ctx.lineTo(p2.x, p2.y);
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
                         ctx.stroke();
                     }
                 }
+            }
+
+            // Renderizar las ondas expansivas de clics de usuario (Efecto distorsión dorada)
+            rippleWaves.forEach((wave, index) => {
+                wave.update();
+                if (wave.radius >= wave.maxRadius) {
+                    rippleWaves.splice(index, 1);
+                } else {
+                    ctx.strokeStyle = `rgba(184, 134, 11, ${wave.alpha * 0.28})`;
+                    ctx.lineWidth = 2.5;
+                    ctx.beginPath();
+                    ctx.arc(wave.x, wave.y, wave.radius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
             });
 
-            requestAnimationFrame(animate);
+            requestAnimationFrame(runFluidEngine);
         }
 
-        animate();
+        runFluidEngine();
     </script>
 </body>
 </html>
