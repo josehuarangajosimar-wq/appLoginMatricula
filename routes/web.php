@@ -13,7 +13,8 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Pasarela OAuth Google
 Route::get('auth/google', [LoginController::class, 'redirectToGoogle'])->name('google.login');
-Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+// CORRECCIÓN: Se le asigna un nombre explícito (google.callback) para evitar fallos del framework
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback'])->name('google.callback');
 
 // Rutas Web de Control Operacional (CRUDs)
 Route::prefix('gestion')->group(function () {

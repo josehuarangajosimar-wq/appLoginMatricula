@@ -6,7 +6,6 @@
     <title>Portal Académico - Registro Institucional</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Animaciones para la Notificación Flotante */
         @keyframes slideInRight {
             0% { transform: translateX(100%) scale(0.9); opacity: 0; }
             70% { transform: translateX(-20px) scale(1.02); }
@@ -21,18 +20,26 @@
             100% { transform: rotate(360deg); }
         }
 
-        /* Estilo de la Notificación Flotante (Toast) */
+        .obsidian-matrix-bg {
+            background-color: #060302;
+            background-image: 
+                linear-gradient(rgba(184, 134, 11, 0.015) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(184, 134, 11, 0.015) 1.5px, transparent 1.5px);
+            background-size: 50px 50px;
+            background-position: center;
+        }
+
         .toast-notification {
             position: fixed;
             top: 30px;
             right: 30px;
             z-index: 9999;
             width: 420px;
-            background: rgba(15, 8, 4, 0.95);
+            background: rgba(15, 8, 4, 0.96);
             backdrop-filter: blur(20px);
             border: 1px solid rgba(184, 134, 11, 0.4);
             border-radius: 1.5rem;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.9);
             animation: slideInRight 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
             overflow: hidden;
             display: flex;
@@ -45,10 +52,9 @@
             animation: shrinkLine 8s linear forwards;
         }
 
-        /* Estilos base del formulario (Iguales al Login para consistencia) */
         .executive-glow-wrapper {
             position: relative; overflow: hidden; border-radius: 3rem; padding: 2px;
-            box-shadow: 0 50px 100px rgba(14, 7, 3, 0.8);
+            box-shadow: 0 50px 100px rgba(14, 7, 3, 0.85);
             transition: all 0.4s ease;
         }
         .executive-glow-wrapper::before {
@@ -56,30 +62,32 @@
             background: conic-gradient(from 0deg, #1f1008 0%, #b8860b 35%, #1f1008 100%);
             animation: rotateNeonBorder 8s linear infinite;
         }
+        
         .glass-hull-dark {
-            position: relative; z-index: 10; background: rgba(14, 7, 3, 0.75);
+            position: relative; z-index: 10; background: rgba(14, 7, 3, 0.86);
             backdrop-filter: blur(50px) saturate(160%); border-radius: calc(3rem - 2px);
         }
+        
         .corporate-matte-input {
-            background: rgba(22, 11, 5, 0.85); border: 1.5px solid rgba(184, 134, 11, 0.18);
+            background: rgba(22, 11, 5, 0.9); border: 1.5px solid rgba(184, 134, 11, 0.2);
             color: #fffbeb; font-weight: 600; transition: all 0.4s ease;
         }
         .corporate-matte-input:focus {
-            background: rgba(14, 7, 3, 0.95); border-color: #b8860b; outline: none;
+            background: rgba(14, 7, 3, 0.98); border-color: #b8860b; outline: none;
         }
+        
         .text-gradient-corporate {
             background: linear-gradient(135deg, #fffbeb 0%, #d97706 100%);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
+        
         .shimmer-vivid-btn {
             background: linear-gradient(135deg, #2b180a 0%, #b8860b 100%);
             transition: all 0.4s ease;
         }
     </style>
 </head>
-<body class="bg-[#0e0704] min-h-screen p-6 md:p-12 lg:p-16 font-sans relative overflow-x-hidden select-none flex items-center">
-    
-    <canvas id="iridescent-canvas" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0"></canvas>
+<body class="obsidian-matrix-bg min-h-screen p-6 md:p-12 lg:p-16 font-sans relative overflow-x-hidden select-none flex items-center">
 
     @if(session('failed_email'))
     <div id="auth-toast" class="toast-notification">
@@ -92,7 +100,7 @@
             <div class="flex-1">
                 <h3 class="text-amber-100 text-sm font-black uppercase tracking-widest mb-1">Aviso de Seguridad</h3>
                 <p class="text-slate-400 text-xs leading-relaxed">
-                    La identidad vinculada a <span class="text-amber-400 font-bold underline">{{ session('failed_email') }}</span> no se encuentra registrada. Para continuar, por favor cree su perfil institucional en este formulario.
+                    La identidad vinculada a <span class="text-amber-400 font-bold underline">{{ session('failed_email') }}</span> no se encuentra registrada[cite: 2]. Para continuar, por favor cree su perfil institucional en este formulario[cite: 2].
                 </p>
             </div>
             <button onclick="closeToast()" class="text-slate-500 hover:text-white transition-colors">
@@ -145,15 +153,15 @@
         </div>
 
         <div class="hidden lg:flex lg:col-span-7 xl:col-span-7.5 flex-col h-full justify-center p-8 space-y-8">
-            <div class="max-w-xl">
+            <div class="max-w-xl text-right w-full pr-12">
                 <p class="text-amber-500/20 text-[10px] font-black uppercase tracking-[1em]">Monitor de Sistema Académico</p>
+                <div class="w-full h-[1.5px] bg-amber-500/10 mt-4"></div>
              </div>
         </div>
 
     </div>
 
     <script>
-        // Cerrar Notificación
         function closeToast() {
             const toast = document.getElementById('auth-toast');
             if(toast) {
@@ -162,26 +170,7 @@
                 setTimeout(() => toast.remove(), 600);
             }
         }
-        // Auto-cierre después de 8 segundos
         setTimeout(closeToast, 8000);
-
-        // Motor de Fondo (Simplificado para rendimiento extremo)
-        const canvas = document.getElementById('iridescent-canvas');
-        const ctx = canvas.getContext('2d');
-        let width = canvas.width = window.innerWidth, height = canvas.height = window.innerHeight;
-        window.addEventListener('resize', () => { width = canvas.width = window.innerWidth; height = canvas.height = window.innerHeight; });
-        function runEngine() {
-            ctx.fillStyle = '#0a0503'; ctx.fillRect(0,0,width,height);
-            // Simulación rápida de partículas
-            ctx.fillStyle = 'rgba(184, 134, 11, 0.1)';
-            for(let i=0; i<50; i++) {
-                ctx.beginPath();
-                ctx.arc(Math.random()*width, Math.random()*height, 1, 0, Math.PI*2);
-                ctx.fill();
-            }
-            requestAnimationFrame(runEngine);
-        }
-        runEngine();
     </script>
 </body>
 </html>
